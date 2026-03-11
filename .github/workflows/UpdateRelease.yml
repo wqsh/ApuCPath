@@ -1,0 +1,127 @@
+name: Download ApuCPath Release
+on:
+  workflow_dispatch:
+    inputs:
+      repository:
+        description: 'Repository name (e.g., owner/repo)'
+        required: true
+        type: string
+        default: wqsh/ApuCPath-code
+        
+      release_name:
+        description: 'Release name to download (e.g., v1.0.0, "Stable Release")'
+        required: true
+        type: string
+
+jobs:
+  download-release-by-name:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.APUCPATHPUBLISH }}  # 改用 PAT_TOKEN，需要在 secrets 中设置
+    
+    steps:
+      - name: Download release by name
+        run: |
+          REPO="${{ github.event.inputs.repository }}"
+          RELEASE_NAME="${{ github.event.inputs.release_name }}"
+          DOWNLOAD_DIR="release_download"
+          
+          echo "=== Searching for release: '$RELEASE_NAME' in $REPO ==="
+          
+          # 创建下载目录
+          mkdir -p "$DOWNLOAD_DIR"
+          
+          # 验证 token 权限
+          echo "Verifying token permissions..."
+          if ! gh repo view "$REPO" > /dev/null 2>&1; then
+            echo "❌ Cannot access repository $REPO"
+            echo "Please check:"
+            echo "  1. PAT_TOKEN is set in repository secrets"
+            echo "  2. PAT_TOKEN has 'repo' scope (for private repos)"
+            echo "  3. You have access to this repository"
+            exit 1
+          fi
+          echo "✅ Token has access to repository"
+          
+          # 获取所有 releases
+          echo "Fetching all releases..."
+          RELEASES=$(gh release list --repo "$REPO" -L 100 --json name,tagName 2>/dev/null)
+          
+          if [ -z "$RELEASES" ] || [ "$RELEASES" = "[]" ]; then
+            echo "❌ No releases found in repository $REPO"
+            echo "Available tags (if any):"
+            gh api "repos/$REPO/tags" --jq '.[] | "  - \(.name)"' 2>/dev/null || echo "  No tags found"
+            exit 1
+          fi
+          
+          # 先尝试完全匹配 name
+          FOUND_RELEASE=$(echo "$RELEASES" | jq -r --arg name "$RELEASE_NAME" '.[] | select(.name == $name) | .tagName' | head -1)
+          
+          # 如果没找到，尝试匹配 tagName
+          if [ -z "$FOUND_RELEASE" ]; then
+            FOUND_RELEASE=$(echo "$RELEASES" | jq -r --arg name "$RELEASE_NAME" '.[] | select(.tagName == $name) | .tagName' | head -1)
+          fi
+          
+          # 如果还没找到，尝试部分匹配
+          if [ -z "$FOUND_RELEASE" ]; then
+            FOUND_RELEASE=$(echo "$RELEASES" | jq -r --arg name "$RELEASE_NAME" '.[] | select(.name | contains($name)) | .tagName' | head -1)
+          fi
+          
+          if [ -z "$FOUND_RELEASE" ]; then
+            echo "❌ No release found matching '$RELEASE_NAME'"
+            echo ""
+            echo "Available releases:"
+            echo "$RELEASES" | jq -r '.[] | "  - \(.name) (tag: \(.tagName))"'
+            exit 1
+          fi
+          
+          echo "✅ Found matching release: $FOUND_RELEASE"
+          echo ""
+          
+          # 显示 release 详细信息
+          echo "Release details:"
+          gh release view "$FOUND_RELEASE" --repo "$REPO" --json name,tagName,createdAt,url,assets
+          
+          # 下载 release
+          echo ""
+          echo "Downloading files..."
+          DOWNLOAD_OUTPUT=$(gh release download "$FOUND_RELEASE" \
+            --repo "$REPO" \
+            --dir "$DOWNLOAD_DIR" \
+            --clobber 2>&1)
+          
+          if [ $? -ne 0 ]; then
+            echo "❌ Download failed:"
+            echo "$DOWNLOAD_OUTPUT"
+            exit 1
+          fi
+          
+          # 显示下载的文件
+          echo ""
+          echo "=== Downloaded files ==="
+          if [ -z "$(ls -A $DOWNLOAD_DIR)" ]; then
+            echo "No files downloaded (release has no assets)"
+            echo "Note: Source code archives are not automatically downloaded"
+          else
+            ls -la "$DOWNLOAD_DIR/"
+            echo ""
+            echo "Total files: $(find "$DOWNLOAD_DIR" -type f | wc -l)"
+            echo "Total size: $(du -sh "$DOWNLOAD_DIR" | cut -f1)"
+          fi
+          
+          # 保存 release 信息
+          echo "$FOUND_RELEASE" > "$DOWNLOAD_DIR/release_tag.txt"
+          echo "$RELEASE_NAME" > "$DOWNLOAD_DIR/search_name.txt"
+          echo "$REPO" > "$DOWNLOAD_DIR/repository.txt"
+          date > "$DOWNLOAD_DIR/download_time.txt"
+          
+      - name: 发布至release  
+        uses: softprops/action-gh-release@v2
+        with:
+          token: ${{ secrets.APUCPATHPUBLISH }}
+          tag_name: ${{ github.event.inputs.release_name }}
+          name: ${{ github.event.inputs.release_name }}
+          files: |
+            release_download/*
+          draft: false
+          prerelease: true

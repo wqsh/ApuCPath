@@ -110,10 +110,10 @@ jobs:
           fi
           
           # 保存 release 信息
-          echo "$FOUND_RELEASE" > "$DOWNLOAD_DIR/release_tag.txt"
-          echo "$RELEASE_NAME" > "$DOWNLOAD_DIR/search_name.txt"
-          echo "$REPO" > "$DOWNLOAD_DIR/repository.txt"
-          date > "$DOWNLOAD_DIR/download_time.txt"
+          # echo "$FOUND_RELEASE" > "$DOWNLOAD_DIR/release_tag.txt"
+          # echo "$RELEASE_NAME" > "$DOWNLOAD_DIR/search_name.txt"
+          # echo "$REPO" > "$DOWNLOAD_DIR/repository.txt"
+          # date > "$DOWNLOAD_DIR/download_time.txt"
           
       - name: 发布至release  
         uses: softprops/action-gh-release@v2

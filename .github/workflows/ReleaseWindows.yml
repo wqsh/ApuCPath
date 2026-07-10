@@ -32,6 +32,7 @@ jobs:
 
       - name: Show dir
         run: |
+          cd ./extracted/
           ls
 
 #      - name: 发布至release

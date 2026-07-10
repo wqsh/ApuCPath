@@ -100,7 +100,7 @@ jobs:
           
       - name: Collect UI
         run: |
-          cp -v ./extracted/ApuCPathEXE ./ApuCPath_windows
+          cp -v -r ./extracted/ApuCPathEXE ./ApuCPath_windows
 
       - name: 发布至release
         uses: softprops/action-gh-release@v2

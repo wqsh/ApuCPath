@@ -74,8 +74,8 @@ jobs:
 
       - name: Collect file
         run: |
-          mkdir ./ApuCPath_windows
-          cp -v -r ./extracted/. ./ApuCPath_windows
+          mkdir ./ApuCPath_Windows
+          cp -v -r ./extracted/. ./ApuCPath_Windows
           
       - name: Download asset from ApuCPathUI_Windows
         uses: robinraju/release-downloader@v1.10

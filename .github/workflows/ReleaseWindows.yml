@@ -114,6 +114,6 @@ jobs:
           tag_name: "ApuCPath_Windows"
           name: "ApuCPath_Windows"
           files: |
-            .\ApuCPath_Windows.7z.*
+            ./ApuCPath_Windows.7z.*
           draft: false
           prerelease: true

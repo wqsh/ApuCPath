@@ -1,0 +1,48 @@
+name: Publish ApuCPath_Windows Release
+on:
+  workflow_dispatch:
+
+jobs:
+  download-release-by-name:
+    runs-on: ubuntu-latest
+    env:
+      GH_TOKEN: ${{ secrets.APUCPATHPUBLISH }}  # 改用 PAT_TOKEN，需要在 secrets 中设置
+    
+    steps:
+      - name: Download asset from another private repo
+        uses: robinraju/release-downloader@v1.10
+        with:
+          repository: "wqsh/ApuCPath-code"
+          tag: "ApuCPathCreateDataset_Windows"
+          fileName: "*.7z.*"
+          token: ${{ secrets.APUCPATHPUBLISH }} # 使用具有 repo 权限的 PAT
+
+      - name: Extract 7z archive
+        run: |
+          # 进入下载目录，找到第一个分卷（.7z.001）并解压到 ../extracted/
+          cd ./downloads
+          FIRST_VOLUME=$(ls *.7z.001 2>/dev/null | head -1)
+          if [ -z "$FIRST_VOLUME" ]; then
+            echo "❌ No .7z.001 file found!"
+            exit 1
+          fi
+          echo "📦 Extracting $FIRST_VOLUME ..."
+          7z x "$FIRST_VOLUME" -y -o../extracted/
+          # 解压成功后，可删除分卷文件以节省空间（可选）
+          cd ..
+          rm -rf ./downloads/
+
+      - name: Show dir
+        run: |
+          dir
+
+#      - name: 发布至release
+#        uses: softprops/action-gh-release@v2
+#        with:
+#          token: ${{ secrets.APUCPATHPUBLISH }}
+#          tag_name: ${{ github.event.inputs.release_name }}
+#          name: ${{ github.event.inputs.release_name }}
+#          files: |
+#            release_download/*
+#          draft: false
+#          prerelease: true

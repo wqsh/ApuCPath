@@ -19,7 +19,7 @@ jobs:
 
       - name: Extract 7z archive
         run: |
-          # 文件就在当前目录，直接解压
+          # 文件就在当前目录，查找 .7z.001 文件
           FIRST_VOLUME=$(ls *.7z.001 2>/dev/null | head -1)
           if [ -z "$FIRST_VOLUME" ]; then
             echo "❌ No .7z.001 file found!"
@@ -27,19 +27,19 @@ jobs:
           fi
           echo "📦 Extracting $FIRST_VOLUME ..."
           7z x "$FIRST_VOLUME" -y -o./extracted/
-          # 清理分卷文件（可选）
+          # 解压成功后删除分卷文件（可选）
           rm -f *.7z.*
 
       - name: Show dir
         run: |
-          dir
+          ls
 
 #      - name: 发布至release
 #        uses: softprops/action-gh-release@v2
 #        with:
 #          token: ${{ secrets.APUCPATHPUBLISH }}
-#          tag_name: ${{ github.event.inputs.release_name }}
-#          name: ${{ github.event.inputs.release_name }}
+#          tag_name: "ApuCPath_Windows"
+#          name: "ApuCPath_Windows"
 #          files: |
 #            release_download/*
 #          draft: false

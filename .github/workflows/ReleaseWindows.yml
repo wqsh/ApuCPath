@@ -100,7 +100,7 @@ jobs:
           
       - name: Collect UI
         run: |
-          cp -v -r ./extracted/ApuCPathEXE ./ApuCPath_windows
+          cp -v -r ./extracted/ApuCPathEXE ./ApuCPath_Windows
           
 
       - name: 7z

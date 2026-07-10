@@ -101,6 +101,11 @@ jobs:
       - name: Collect UI
         run: |
           cp -v -r ./extracted/ApuCPathEXE ./ApuCPath_windows
+          
+
+      - name: 7z
+        run: |
+          7z a -v1000m ApuCPath_Windows.7z .\ApuCPath_Windows
 
       - name: 发布至release
         uses: softprops/action-gh-release@v2
@@ -109,6 +114,6 @@ jobs:
           tag_name: "ApuCPath_Windows"
           name: "ApuCPath_Windows"
           files: |
-            ApuCPath_windows/*
+            .\ApuCPathModel.7z.*
           draft: false
           prerelease: true

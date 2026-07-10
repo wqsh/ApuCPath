@@ -9,7 +9,7 @@ jobs:
       GH_TOKEN: ${{ secrets.APUCPATHPUBLISH }}  # 改用 PAT_TOKEN，需要在 secrets 中设置
     
     steps:
-      - name: Download asset from another private repo
+      - name: Download ApuCPathCreateDataset_Windows
         uses: robinraju/release-downloader@v1.10
         with:
           repository: "wqsh/ApuCPath-code"
@@ -17,7 +17,28 @@ jobs:
           fileName: "*.7z.*"
           token: ${{ secrets.APUCPATHPUBLISH }} # 使用具有 repo 权限的 PAT
 
-      - name: Extract 7z archive
+      - name: Extract 7z ApuCPathCreateDataset_Windows
+        run: |
+          # 文件就在当前目录，查找 .7z.001 文件
+          FIRST_VOLUME=$(ls *.7z.001 2>/dev/null | head -1)
+          if [ -z "$FIRST_VOLUME" ]; then
+            echo "❌ No .7z.001 file found!"
+            exit 1
+          fi
+          echo "📦 Extracting $FIRST_VOLUME ..."
+          7z x "$FIRST_VOLUME" -y -o./extracted/
+          # 解压成功后删除分卷文件（可选）
+          rm -f *.7z.*
+          
+      - name: Download asset from ApuCPathAnnotation_Windows
+        uses: robinraju/release-downloader@v1.10
+        with:
+          repository: "wqsh/ApuCPath-code"
+          tag: "ApuCPathAnnotation_Windows"
+          fileName: "*.7z.*"
+          token: ${{ secrets.APUCPATHPUBLISH }} # 使用具有 repo 权限的 PAT
+
+      - name: Extract 7z ApuCPathAnnotation_Windows
         run: |
           # 文件就在当前目录，查找 .7z.001 文件
           FIRST_VOLUME=$(ls *.7z.001 2>/dev/null | head -1)
@@ -30,18 +51,64 @@ jobs:
           # 解压成功后删除分卷文件（可选）
           rm -f *.7z.*
 
-      - name: Show dir
-        run: |
-          cd ./extracted/
-          ls
+      - name: Download asset from ApuCPathModel_Windows
+        uses: robinraju/release-downloader@v1.10
+        with:
+          repository: "wqsh/ApuCPath-code"
+          tag: "ApuCPathModel_Windows"
+          fileName: "*.7z.*"
+          token: ${{ secrets.APUCPATHPUBLISH }} # 使用具有 repo 权限的 PAT
 
-#      - name: 发布至release
-#        uses: softprops/action-gh-release@v2
-#        with:
-#          token: ${{ secrets.APUCPATHPUBLISH }}
-#          tag_name: "ApuCPath_Windows"
-#          name: "ApuCPath_Windows"
-#          files: |
-#            release_download/*
-#          draft: false
-#          prerelease: true
+      - name: Extract 7z ApuCPathModel_Windows
+        run: |
+          # 文件就在当前目录，查找 .7z.001 文件
+          FIRST_VOLUME=$(ls *.7z.001 2>/dev/null | head -1)
+          if [ -z "$FIRST_VOLUME" ]; then
+            echo "❌ No .7z.001 file found!"
+            exit 1
+          fi
+          echo "📦 Extracting $FIRST_VOLUME ..."
+          7z x "$FIRST_VOLUME" -y -o./extracted/
+          # 解压成功后删除分卷文件（可选）
+          rm -f *.7z.*
+
+      - name: Collect file
+        run: |
+          mkdir ./ApuCPath_windows
+          cp -v .\extracted .\ApuCPath_windows
+          
+      - name: Download asset from ApuCPathUI_Windows
+        uses: robinraju/release-downloader@v1.10
+        with:
+          repository: "wqsh/ApuCPath-code"
+          tag: "ApuCPathUI_Windows"
+          fileName: "*.7z.*"
+          token: ${{ secrets.APUCPATHPUBLISH }} # 使用具有 repo 权限的 PAT
+
+      - name: Extract 7z ApuCPathUI_Windows
+        run: |
+          # 文件就在当前目录，查找 .7z.001 文件
+          FIRST_VOLUME=$(ls *.7z.001 2>/dev/null | head -1)
+          if [ -z "$FIRST_VOLUME" ]; then
+            echo "❌ No .7z.001 file found!"
+            exit 1
+          fi
+          echo "📦 Extracting $FIRST_VOLUME ..."
+          7z x "$FIRST_VOLUME" -y -o./extracted/
+          # 解压成功后删除分卷文件（可选）
+          rm -f *.7z.*
+          
+      - name: Collect UI
+        run: |
+          cp -v .\extracted\ApuCPathEXE .\ApuCPath_windows
+
+      - name: 发布至release
+        uses: softprops/action-gh-release@v2
+        with:
+          token: ${{ secrets.APUCPATHPUBLISH }}
+          tag_name: "ApuCPath_Windows"
+          name: "ApuCPath_Windows"
+          files: |
+            ApuCPath_windows/*
+          draft: false
+          prerelease: true

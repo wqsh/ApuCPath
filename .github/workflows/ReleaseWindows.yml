@@ -19,18 +19,16 @@ jobs:
 
       - name: Extract 7z archive
         run: |
-          # 进入下载目录，找到第一个分卷（.7z.001）并解压到 ../extracted/
-          cd ./downloads
+          # 文件就在当前目录，直接解压
           FIRST_VOLUME=$(ls *.7z.001 2>/dev/null | head -1)
           if [ -z "$FIRST_VOLUME" ]; then
             echo "❌ No .7z.001 file found!"
             exit 1
           fi
           echo "📦 Extracting $FIRST_VOLUME ..."
-          7z x "$FIRST_VOLUME" -y -o../extracted/
-          # 解压成功后，可删除分卷文件以节省空间（可选）
-          cd ..
-          rm -rf ./downloads/
+          7z x "$FIRST_VOLUME" -y -o./extracted/
+          # 清理分卷文件（可选）
+          rm -f *.7z.*
 
       - name: Show dir
         run: |

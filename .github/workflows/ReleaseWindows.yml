@@ -75,14 +75,14 @@ jobs:
       #      - name: Collect bin file
       #        run: |
       #          cp -v -r ./extracted/. ./ApuCPath_Windows
-      #
-      #      - name: Download asset from UNIBackbone
-      #        uses: robinraju/release-downloader@v1.10
-      #        with:
-      #          repository: "wqsh/ApuCPath"
-      #          tag: "UNIBackbone"
-      #          fileName: "*.7z"
-      #          token: ${{ secrets.APUCPATHPUBLISH }} # 使用具有 repo 权限的 PAT
+
+      - name: Download asset from UNIBackbone
+        uses: robinraju/release-downloader@v1.10
+        with:
+          repository: "wqsh/ApuCPath"
+          tag: "UNIBackbone"
+          fileName: "*.7z"
+          token: ${{ secrets.APUCPATHPUBLISH }} # 使用具有 repo 权限的 PAT
 
       - name: Extract 7z Archive
         run: |

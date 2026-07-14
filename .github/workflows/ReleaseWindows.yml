@@ -71,8 +71,35 @@ jobs:
           7z x "$FIRST_VOLUME" -y -o./extracted/
           # 解压成功后删除分卷文件（可选）
           rm -f *.7z.*
+      
+      - name: Collect bin file
+        run: |
+          mkdir ./ApuCPath_Windows
+          cp -v -r ./extracted/. ./ApuCPath_Windows
 
-      - name: Collect file
+      - name: Download asset from UNIBackbone
+        uses: robinraju/release-downloader@v1.10
+        with:
+          repository: "wqsh/ApuCPath"
+          tag: "UNIBackbone"
+          fileName: "*.7z.*"
+          token: ${{ secrets.APUCPATHPUBLISH }} # 使用具有 repo 权限的 PAT
+
+      - name: Extract 7z Archive
+        run: |
+          # 查找第一个 .7z 文件（如果有多个，只取第一个）
+          FILE=$(ls *.7z 2>/dev/null | head -1)
+          if [ -z "$FILE" ]; then
+            echo "❌ 当前目录没有找到 .7z 文件！"
+            exit 1
+          fi
+          echo "📦 正在解压 $FILE ..."
+          7z x "$FILE" -y -o./extracted/
+          # 解压成功后删除原文件（可选）
+          rm -f "$FILE"
+          echo "✅ 解压完成，内容位于 ./extracted/"
+
+      - name: Collect UNI
         run: |
           mkdir ./ApuCPath_Windows
           cp -v -r ./extracted/. ./ApuCPath_Windows

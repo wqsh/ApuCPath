@@ -9,72 +9,72 @@ jobs:
       GH_TOKEN: ${{ secrets.APUCPATHPUBLISH }}  # 改用 PAT_TOKEN，需要在 secrets 中设置
     
     steps:
-      #      - name: Download ApuCPathCreateDataset_Windows
-      #        uses: robinraju/release-downloader@v1.10
-      #        with:
-      #          repository: "wqsh/ApuCPath-code"
-      #          tag: "ApuCPathCreateDataset_Windows"
-      #          fileName: "*.7z.*"
-      #          token: ${{ secrets.APUCPATHPUBLISH }} # 使用具有 repo 权限的 PAT
-      #
-      #      - name: Extract 7z ApuCPathCreateDataset_Windows
-      #        run: |
-      #          # 文件就在当前目录，查找 .7z.001 文件
-      #          FIRST_VOLUME=$(ls *.7z.001 2>/dev/null | head -1)
-      #          if [ -z "$FIRST_VOLUME" ]; then
-      #            echo "❌ No .7z.001 file found!"
-      #            exit 1
-      #          fi
-      #          echo "📦 Extracting $FIRST_VOLUME ..."
-      #          7z x "$FIRST_VOLUME" -y -o./extracted/
-      #          # 解压成功后删除分卷文件（可选）
-      #          rm -f *.7z.*
-      #
-      #      - name: Download asset from ApuCPathAnnotation_Windows
-      #        uses: robinraju/release-downloader@v1.10
-      #        with:
-      #          repository: "wqsh/ApuCPath-code"
-      #          tag: "ApuCPathAnnotation_Windows"
-      #          fileName: "*.7z.*"
-      #          token: ${{ secrets.APUCPATHPUBLISH }} # 使用具有 repo 权限的 PAT
-      #
-      #      - name: Extract 7z ApuCPathAnnotation_Windows
-      #        run: |
-      #          # 文件就在当前目录，查找 .7z.001 文件
-      #          FIRST_VOLUME=$(ls *.7z.001 2>/dev/null | head -1)
-      #          if [ -z "$FIRST_VOLUME" ]; then
-      #            echo "❌ No .7z.001 file found!"
-      #            exit 1
-      #          fi
-      #          echo "📦 Extracting $FIRST_VOLUME ..."
-      #          7z x "$FIRST_VOLUME" -y -o./extracted/
-      #          # 解压成功后删除分卷文件（可选）
-      #          rm -f *.7z.*
-      #
-      #      - name: Download asset from ApuCPathModel_Windows
-      #        uses: robinraju/release-downloader@v1.10
-      #        with:
-      #          repository: "wqsh/ApuCPath-code"
-      #          tag: "ApuCPathModel_Windows"
-      #          fileName: "*.7z.*"
-      #          token: ${{ secrets.APUCPATHPUBLISH }} # 使用具有 repo 权限的 PAT
-      #
-      #      - name: Extract 7z ApuCPathModel_Windows
-      #        run: |
-      #          # 文件就在当前目录，查找 .7z.001 文件
-      #          FIRST_VOLUME=$(ls *.7z.001 2>/dev/null | head -1)
-      #          if [ -z "$FIRST_VOLUME" ]; then
-      #            echo "❌ No .7z.001 file found!"
-      #            exit 1
-      #          fi
-      #          echo "📦 Extracting $FIRST_VOLUME ..."
-      #          7z x "$FIRST_VOLUME" -y -o./extracted/
-      #          # 解压成功后删除分卷文件（可选）
-      #          rm -f *.7z.*
-      #
-      #      - name: Collect bin file
-      #        run: |
-      #          cp -v -r ./extracted/. ./ApuCPath_Windows
+      - name: Download ApuCPathCreateDataset_Windows
+        uses: robinraju/release-downloader@v1.10
+        with:
+          repository: "wqsh/ApuCPath-code"
+          tag: "ApuCPathCreateDataset_Windows"
+          fileName: "*.7z.*"
+          token: ${{ secrets.APUCPATHPUBLISH }} # 使用具有 repo 权限的 PAT
+
+      - name: Extract 7z ApuCPathCreateDataset_Windows
+        run: |
+          # 文件就在当前目录，查找 .7z.001 文件
+          FIRST_VOLUME=$(ls *.7z.001 2>/dev/null | head -1)
+          if [ -z "$FIRST_VOLUME" ]; then
+            echo "❌ No .7z.001 file found!"
+            exit 1
+          fi
+          echo "📦 Extracting $FIRST_VOLUME ..."
+          7z x "$FIRST_VOLUME" -y -o./extracted/
+          # 解压成功后删除分卷文件（可选）
+          rm -f *.7z.*
+
+      - name: Download asset from ApuCPathAnnotation_Windows
+        uses: robinraju/release-downloader@v1.10
+        with:
+          repository: "wqsh/ApuCPath-code"
+          tag: "ApuCPathAnnotation_Windows"
+          fileName: "*.7z.*"
+          token: ${{ secrets.APUCPATHPUBLISH }} # 使用具有 repo 权限的 PAT
+
+      - name: Extract 7z ApuCPathAnnotation_Windows
+        run: |
+          # 文件就在当前目录，查找 .7z.001 文件
+          FIRST_VOLUME=$(ls *.7z.001 2>/dev/null | head -1)
+          if [ -z "$FIRST_VOLUME" ]; then
+            echo "❌ No .7z.001 file found!"
+            exit 1
+          fi
+          echo "📦 Extracting $FIRST_VOLUME ..."
+          7z x "$FIRST_VOLUME" -y -o./extracted/
+          # 解压成功后删除分卷文件（可选）
+          rm -f *.7z.*
+
+      - name: Download asset from ApuCPathModel_Windows
+        uses: robinraju/release-downloader@v1.10
+        with:
+          repository: "wqsh/ApuCPath-code"
+          tag: "ApuCPathModel_Windows"
+          fileName: "*.7z.*"
+          token: ${{ secrets.APUCPATHPUBLISH }} # 使用具有 repo 权限的 PAT
+
+      - name: Extract 7z ApuCPathModel_Windows
+        run: |
+          # 文件就在当前目录，查找 .7z.001 文件
+          FIRST_VOLUME=$(ls *.7z.001 2>/dev/null | head -1)
+          if [ -z "$FIRST_VOLUME" ]; then
+            echo "❌ No .7z.001 file found!"
+            exit 1
+          fi
+          echo "📦 Extracting $FIRST_VOLUME ..."
+          7z x "$FIRST_VOLUME" -y -o./extracted/
+          # 解压成功后删除分卷文件（可选）
+          rm -f *.7z.*
+
+      - name: Collect bin file
+        run: |
+          cp -v -r ./extracted/. ./ApuCPath_Windows
 
       - name: Download asset from UNIBackbone
         uses: robinraju/release-downloader@v1.10

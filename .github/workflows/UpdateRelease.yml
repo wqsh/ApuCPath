@@ -124,4 +124,4 @@ jobs:
           files: |
             release_download/*
           draft: false
-          prerelease: true
+          make_latest: true

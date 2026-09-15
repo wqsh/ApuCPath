@@ -1,0 +1,14 @@
+data_root: '/media/wqs/SOFT/weiqiushi/Project/UNI/Segmentation/sample_data'
+num_classes: 5
+patch_size: 256
+batch_size: 2
+num_epochs: 100
+lr: 0.0001
+weight_decay: 0.05
+backbone_frozen: true
+checkpoint_dir: './checkpoints'
+uni_checkpoint: '/media/wqs/SOFT/weiqiushi/Project/UNI/UNI2Model/UNI/pytorch_model.bin'
+weight_dict:
+  loss_ce: 2.0
+  loss_mask: 5.0
+  loss_dice: 5.0

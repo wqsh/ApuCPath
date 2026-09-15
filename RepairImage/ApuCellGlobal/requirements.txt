@@ -1,0 +1,17 @@
+imageio
+matplotlib
+networkx
+numpy==1.23.5
+opencv-python-headless==4.10.0.84
+pandas
+pillow
+pytz
+scikit-image
+scipy
+tifffile
+psutil
+openslide-python
+imagecodecs
+imagesize
+pyvips
+shapely

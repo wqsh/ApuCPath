@@ -1,0 +1,20 @@
+windows
+
+conda 创建一个python 3.11的环境
+
+conda install mkl
+
+conda install gdal
+
+pip install -r .\ApuCellGlobal\requirements.txt
+
+==============================
+linux
+
+conda install -c conda-forge gdal pyvips openslide openslide-python
+
+pip install -r .\ApuCellGlobal\requirements.txt
+
+pyinstaller ApuCPathCreateDataset.py -F --hidden-import imageio --collect-all imageio --hidden-import=osgeo._gdal --collect-all osgeo --add-binary "${CONDA_PREFIX}/lib/libnsl.so*:." --add-binary "ApuCellGlobal/DLL/libopenslide.so.1:openslide_bin"
+
+cp -r ApuCellGlobal/DLL dist/

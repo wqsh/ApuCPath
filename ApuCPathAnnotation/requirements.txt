@@ -1,0 +1,8 @@
+PyQt5
+shapely
+psutil
+opencv-python-headless
+imagesize
+openslide-python
+pillow
+numpy==1.23.5

@@ -1,0 +1,37 @@
+windows
+
+conda 创建一个python 3.11的环境
+
+conda install mkl
+
+conda install gdal
+
+pip install requirements.txt
+
+pip install -r .\ApuCellGlobal\requirements.txt
+
+
+打包说明
+
+qrc文件修改后更新
+
+pyrcc5 .\QTPackage\Window\Icon\ApuCPathIcon.qrc -o .\QTPackage\Window\IconCode\ApuCPathIcon_rc.py
+
+ui文件修改后更新
+
+pyuic5 .\QTPackage\Window\UI\WindowApuCPathMain.ui -o .\QTPackage\Window\UICode\MSWindowApuCPathMain.py --import-from QTPackage.Window.IconCode
+pyuic5 .\QTPackage\Window\UI\WindowApuCPathSelectForDataset.ui -o .\QTPackage\Window\UICode\MSWindowApuCPathSelectForDataset.py --import-from QTPackage.Window.IconCode
+
+
+====================================================
+
+linux打包
+
+conda install -c conda-forge gdal pyvips openslide openslide-python
+
+pip install -r \ApuCellGlobal\requirements.txt
+
+pyinstaller ApuCPath.py -F --hidden-import imageio --collect-all imageio --hidden-import=osgeo._gdal --collect-all osgeo --add-binary "${CONDA_PREFIX}/lib/libnsl.so*:." --add-binary "ApuCellGlobal/DLL/libopenslide.so.1:openslide_bin" --add-data "${CONDA_PREFIX}/lib/python*/site-packages/PyQt5/Qt5/plugins:PyQt5/Qt/plugins" --add-binary "${CONDA_PREFIX}/lib/python*/site-packages/PyQt5/Qt5/lib/*.so*:."
+
+cp -r ApuCellGlobal/DLL dist/
+cp -r ${CONDA_PREFIX}/lib/python*/site-packages/PyQt5/Qt5/plugins/platforms dist/

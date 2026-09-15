@@ -1,0 +1,2 @@
+NAME_CHECK_GPU = r"CheckGPU.exe"
+NAME_CHECK_GPU_LINUX = r"CheckGPU"

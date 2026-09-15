@@ -1,0 +1,20 @@
+windows
+
+conda 创建一个python 3.11的环境
+
+pip install -r requirements.txt
+
+conda install gdal
+
+
+=============================
+
+linux
+
+conda install -c conda-forge gdal pyvips openslide openslide-python
+
+pyinstaller ApuCPathAnnotation.py -F --hidden-import=osgeo._gdal --collect-all osgeo --add-binary "${CONDA_PREFIX}/lib/libnsl.so*:." --add-binary "${CONDA_PREFIX}/lib/python*/site-packages/openslide_bin/libopenslide.so.1:openslide_bin" --add-data "${CONDA_PREFIX}/lib/python*/site-packages/PyQt5/Qt5/plugins:PyQt5/Qt/plugins" --add-binary "${CONDA_PREFIX}/lib/python*/site-packages/PyQt5/Qt5/lib/*.so*:."
+
+cp -r ${CONDA_PREFIX}/lib/python*/site-packages/PyQt5/Qt5/plugins/platforms dist/
+cp -r ui dist/
+cp -r resources dist/

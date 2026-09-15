@@ -1,0 +1,5 @@
+pycocotools
+tqdm
+tensorboard
+albumentations==2.0.8
+timm

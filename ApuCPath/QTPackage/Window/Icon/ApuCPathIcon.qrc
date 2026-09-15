@@ -1,0 +1,13 @@
+<RCC>
+  <qresource prefix="Icon">
+    <file>Control/Cross.png</file>
+    <file>Control/Normal.png</file>
+    <file>Control/ZoomIn.png</file>
+    <file>Control/ZoomOut.png</file>
+    <file>Label/ArrowRightDoubleLine.png</file>
+    <file>Label/CircleLine.png</file>
+    <file>State/BlueLight.png</file>
+    <file>State/GreenLight.png</file>
+    <file>State/RedLight.png</file>
+  </qresource>
+</RCC>

@@ -1,0 +1,19 @@
+NAME_SOFTWARE = 'WSISeg'
+
+NAME_COCO_MODEL_PARAMETER = "mask_rcnn_coco.h5"
+
+FOLDER_MODEL = 'Model'
+FOLDER_TMP = 'tmp'
+FOLDER_PROCESSED = 'processed'
+
+FOLDER_TRAIN_RESULT = "Train"
+FOLDER_PREDICT = "Predict"
+FOLDER_PREDICT_MASK = "PredictMask"
+
+SUFFIX_HEATMAP = '_heatmap'
+
+
+FOLDER_UNI_MODEL = "UNIModel"
+FOLDER_UNI = "UNI"
+FOLDER_UNI2 = "UNI2-H"
+NAME_UNI_CHECKPOINT = "pytorch_model.bin"

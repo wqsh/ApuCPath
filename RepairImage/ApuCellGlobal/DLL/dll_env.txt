@@ -1,0 +1,10 @@
+LD_LIBRARY_PATH=/media/ubuntu/SOFT/weiqiushi/Project/ApuCellGlobal/ApuCellGlobal/DLL;
+# QT_PLUGIN_PATH=/media/ubuntu/SOFT/weiqiushi/Project/ImageView/.venv/lib/python3.9/site-packages/PyQt5/Qt5/plugins/platforms;
+
+pyvips：linux需要配置libvips环境，sudo apt-get install libvips-dev即可,linux下不同的python版本需要下载对应的devel才能正常安装，
+        如python3.7就是sudo apt-get install python3.7-dev
+        python3.11就是sudo apt-get install python3.11-dev
+
+openslide:linux需要配置openslide环境，
+        sudo apt-get install openslide-tools
+        sudo apt-get install python-openslide

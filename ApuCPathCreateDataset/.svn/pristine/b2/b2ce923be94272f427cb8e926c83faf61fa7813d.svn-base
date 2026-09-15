@@ -1,0 +1,10 @@
+windows
+
+conda 创建一个python 3.11的环境
+
+conda install mkl
+
+conda install gdal
+
+pip install -r .\ApuCellGlobal\requirements.txt
+

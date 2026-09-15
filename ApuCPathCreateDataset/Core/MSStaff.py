@@ -1,0 +1,132 @@
+# -*- coding: utf-8 -*-
+from Core.MSSystem import NAME_SOFTWARE
+from Core.MSDataPack import CDataPack
+from Core.MSFlow import CFlowCreateDataset
+from Core.MSFunctionConfig import CFunctionConfig
+
+from ApuCellGlobal.GeneralSystem.MSSystem import NAME_CONFIG, NAME_FOR_MSREGISTER, NAME_PUBLIC_SECURITY, FOLDER_MSREGISTER, LINK_APPLICATION
+from ApuCellGlobal.GeneralSystem.MSSystem import INFO_TO_USER_Staff, EXPIRATION_TIME
+from ApuCellGlobal.GeneralSystem.MSLogging import CLogging
+
+import os
+import sys
+import time
+import datetime
+from ctypes import *
+
+EXPIRATION_TIME['Year'] = 2027
+EXPIRATION_TIME['Month'] = 5
+EXPIRATION_TIME['Day'] = 31
+
+class CStaff:
+    def __init__(self):
+        self.dp = CDataPack()
+
+    def start(self, inputArgv):
+
+        # debug是以代码运行的
+        CLogging.LogForStart(NAME_SOFTWARE)
+        start_time = time.time()
+
+        # 旧版检测时间
+        self.__captainCheckTime()
+        self.__captainRunFlow(inputArgv)
+
+        # self.__captainImportDLL()
+
+        # if self.__captainCheckForRegister():
+        #     is_exception = False
+        #     try:
+        #         self.__captainRunFlow(inputArgv)
+        #     except Exception as msg:
+        #         CLogging.LogException(msg)
+        #         is_exception = True
+        #     self.__captainEndOperation(is_exception)
+
+        end_time = time.time()
+        CLogging.LogToUser(" Task finish in %.4lfs." % (end_time - start_time))
+        CLogging.LogForEnd(NAME_SOFTWARE)
+
+    def __captainCheckTime(self):
+        dateNow = datetime.datetime.now()
+        dateDead = datetime.datetime(EXPIRATION_TIME['Year'], EXPIRATION_TIME['Month'], EXPIRATION_TIME['Day'], 23, 59)
+        n_day = (dateDead - dateNow).days
+        if n_day < 0:
+            print(INFO_TO_USER_Staff[0])
+            sys.exit(-1)
+        elif n_day < 7:
+            print(INFO_TO_USER_Staff[1])
+        else:
+            print(INFO_TO_USER_Staff[2])
+            print(dateNow)
+
+    def __captainRunFlow(self, inputArgv):
+
+
+        if len(inputArgv) == 1:
+            CFunctionConfig.Config2File(self.dp.cfg, os.getcwd(), NAME_CONFIG)
+        elif len(inputArgv) == 2:
+            CFunctionConfig.File2Config(inputArgv[1], self.dp.cfg)
+
+            flowCreateDataset = CFlowCreateDataset(self.dp)
+            flowCreateDataset.run()
+
+        elif len(inputArgv) == 3:
+            if inputArgv[2] == 'debug':
+                CFunctionConfig.File2Config(inputArgv[1], self.dp.cfg)
+
+                flowCreateDataset = CFlowCreateDataset(self.dp)
+                flowCreateDataset.run()
+
+        else:
+            pass
+
+    def __captainImportDLL(self, path_MSRegister_dll: str = None):
+
+        current_work_dir = os.path.join(os.getcwd(), FOLDER_MSREGISTER)
+        if path_MSRegister_dll is None:
+            path_MSRegister_dll = os.path.join(current_work_dir, NAME_FOR_MSREGISTER[0])
+        if not os.path.exists(path_MSRegister_dll):
+            # 这个不存在就直接报错了
+            CLogging.LogError("[Error] Missing file : " + NAME_FOR_MSREGISTER[0])
+        # 导入动态链接库
+        self.dll = CDLL(path_MSRegister_dll)
+        # 这里是做函数的输入输出类型的定义
+        self.dll.RegisterSoftware.argtype = (POINTER(c_char_p))
+        self.dll.SetWorkRegister.argtype = (POINTER(c_char_p))
+        self.dll.ApplicationLink.argtype = (POINTER(c_char_p))
+        self.dll.PublicSecurity.argtype = (POINTER(c_char_p))
+        self.dll.RegisterFunction.argtype = (POINTER(c_char_p), POINTER(c_char_p))
+        self.dll.RegisterForCheck.restype = (c_bool)
+        self.dll.EndOperation.argtype = (c_bool)
+
+    def __captainCheckForRegister(self, path_license: str = None, path_probation: str = None):
+        current_work_dir = os.path.join(os.getcwd(), FOLDER_MSREGISTER)
+        if path_license is None:
+            path_license = os.path.join(current_work_dir, NAME_FOR_MSREGISTER[1])
+        if path_probation is None:
+            path_probation = os.path.join(current_work_dir, NAME_FOR_MSREGISTER[2])
+
+        software_str = c_char_p(NAME_SOFTWARE.encode())
+
+        application_link = c_char_p(LINK_APPLICATION.encode())
+        path_public_security = c_char_p(os.path.join(os.getcwd(), NAME_PUBLIC_SECURITY).encode())
+
+        func1_name = c_char_p("License".encode())
+        path1 = c_char_p(path_license.encode())
+        func2_name = c_char_p("Probation".encode())
+        path2 = c_char_p(path_probation.encode())
+
+        self.dll.RegisterSoftware(software_str)
+        self.dll.SetWorkRegister(software_str)
+        self.dll.ApplicationLink(application_link)
+        self.dll.PublicSecurity(path_public_security)
+        self.dll.RegisterFunction(func1_name, path1)
+        self.dll.RegisterFunction(func2_name, path2)
+        ret = self.dll.RegisterForCheck()
+        return ret
+
+    def __captainEndOperation(self, is_exception: bool):
+
+        self.dll.EndOperation(c_bool(is_exception))
+
